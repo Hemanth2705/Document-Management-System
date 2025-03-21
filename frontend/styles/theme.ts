@@ -1,21 +1,35 @@
 const theme = {
     colors: {
-      primary: "#007bff",  // Blue
-      secondary: "#0056b3", // Darker Blue
-      background: "#f8f9fa", // Light Gray (White alternative)
+      background: "#f8f9fa",     // light gray background
+      text: "#333333",           // dark readable text
+      primary: "#007bff",        // main action blue
+      secondary: "#0056b3",      // darker shade for hover
       white: "#ffffff",
-      text: "#333333", // Dark Gray for contrast
-      border: "#d1d1d1", // Light gray border
+      border: "#cccccc",
+      light: "#f0f8ff",          // very light blue
+      error: "#dc3545",          // red for form errors
     },
-    spacing: {
-      small: "8px",
-      medium: "16px",
+    fontSizes: {
       large: "24px",
+      medium: "20px",
+      small: "16px",
     },
-    fontSize: {
-      small: "14px",
-      medium: "16px",
+    space: {
+      xl: "30px",
       large: "20px",
+      medium: "15px",
+      small: "10px",
+      xs: "5px",
+    },
+    radius: {
+      default: "5px",
+      round: "50%",
+    },
+    shadow: {
+      subtle: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    },
+    fontFamily: {
+      base: '"Arial", sans-serif',
     },
   };
   

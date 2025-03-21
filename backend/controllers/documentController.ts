@@ -1,26 +1,40 @@
-import { Request, Response } from 'express';
-import { db } from '../config/db';
-import { ResultSetHeader } from 'mysql2';
+import { Request, Response } from "express";
+import { db } from "../config/db";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 
-export const getDocuments = (req: Request, res: Response) => {
-    db.query('SELECT * FROM documents', (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json(result);
-    });
+// ✅ Get All Documents (returns an empty array if none)
+export const getDocuments = async (req: Request, res: Response) => {
+  try {
+    const [rows] = await db.query<RowDataPacket[]>("SELECT * FROM documents");
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error("❌ Error fetching documents:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
-export const addDocument = (req: Request, res: Response) => {
+// ✅ Add a New Document
+export const addDocument = async (req: Request, res: Response) => {
+  try {
     const { name, type, folder_id } = req.body;
 
-    db.query(
-        'INSERT INTO documents (name, type, folder_id) VALUES (?, ?, ?)',
-        [name, type, folder_id],
-        (err, result) => {
-            if (err) return res.status(500).json(err);
+    if (!name || !type) {
+      return res.status(400).json({ error: "Name and type are required" });
+    }
 
-            // Type assertion to access `insertId`
-            const insertResult = result as ResultSetHeader;
-            res.json({ id: insertResult.insertId, name, type, folder_id });
-        }
+    const [result] = await db.query<ResultSetHeader>(
+      "INSERT INTO documents (name, type, folder_id) VALUES (?, ?, ?)",
+      [name, type, folder_id || null]
     );
+
+    res.status(201).json({
+      id: result.insertId,
+      name,
+      type,
+      folder_id,
+    });
+  } catch (err) {
+    console.error("❌ Error adding document:", err);
+    res.status(500).json({ error: "Failed to add document" });
+  }
 };

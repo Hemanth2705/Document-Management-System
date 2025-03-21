@@ -1,28 +1,43 @@
-import { Request, Response } from 'express';
-import { db } from '../config/db';
-import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { Request, Response } from "express";
+import { db } from "../config/db";
+import { RowDataPacket, ResultSetHeader } from "mysql2";
 
-// Fetch all folders
-export const getFolders = (req: Request, res: Response) => {
-    db.query<RowDataPacket[]>('SELECT * FROM folders', (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json(result);
-    });
+// ✅ Get All Folders
+export const getFolders = async (req: Request, res: Response) => {
+  try {
+    const [rows] = await db.query<RowDataPacket[]>("SELECT * FROM folders");
+    res.status(200).json(rows); // Always return array (even if empty)
+  } catch (err) {
+    console.error("❌ Error fetching folders:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
-// Add a new folder
-export const addFolder = (req: Request, res: Response) => {
+// ✅ Add a New Folder
+export const addFolder = async (req: Request, res: Response) => {
+  try {
     const { name, parent_folder_id } = req.body;
 
-    db.query<ResultSetHeader>(
-        'INSERT INTO folders (name, parent_folder_id) VALUES (?, ?)',
-        [name, parent_folder_id],
-        (err, result) => {
-            if (err) return res.status(500).json(err);
+    if (!name || typeof name !== "string") {
+      return res.status(400).json({ error: "Folder name is required" });
+    }
 
-            // Type assertion to access `insertId`
-            const insertResult = result as ResultSetHeader;
-            res.json({ id: insertResult.insertId, name, parent_folder_id });
-        }
+    if (parent_folder_id !== null && parent_folder_id !== undefined && isNaN(Number(parent_folder_id))) {
+      return res.status(400).json({ error: "Parent folder ID must be a number" });
+    }
+
+    const [result] = await db.query<ResultSetHeader>(
+      "INSERT INTO folders (name, parent_folder_id) VALUES (?, ?)",
+      [name, parent_folder_id || null]
     );
+
+    res.status(201).json({
+      id: result.insertId,
+      name,
+      parent_folder_id,
+    });
+  } catch (err) {
+    console.error("❌ Error adding folder:", err);
+    res.status(500).json({ error: "Failed to add folder" });
+  }
 };

@@ -1,66 +1,84 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  * {
+  *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Arial", sans-serif;
   }
 
   body {
+    font-family: ${({ theme }) => theme.fontFamily.base};
     background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
-    padding: 20px;
+    padding: ${({ theme }) => theme.space.large};
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    background: ${({ theme }) => theme.colors.white};
+    padding: ${({ theme }) => theme.space.large};
+    border-radius: ${({ theme }) => theme.radius.default};
+    box-shadow: ${({ theme }) => theme.shadow.subtle};
   }
 
   h1 {
-    font-size: ${({ theme }) => theme.fontSize.large};
+    font-size: ${({ theme }) => theme.fontSizes.large};
     color: ${({ theme }) => theme.colors.primary};
     text-align: center;
-    margin-bottom: ${({ theme }) => theme.spacing.large};
+    margin-bottom: ${({ theme }) => theme.space.large};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1::before {
+    content: "📁";
+    font-size: 28px;
+    margin-right: 10px;
   }
 
   h2 {
-    font-size: ${({ theme }) => theme.fontSize.medium};
+    font-size: ${({ theme }) => theme.fontSizes.medium};
     color: ${({ theme }) => theme.colors.secondary};
-    margin-bottom: ${({ theme }) => theme.spacing.medium};
+    margin-bottom: ${({ theme }) => theme.space.medium};
+    border-bottom: 2px solid ${({ theme }) => theme.colors.primary};
+    padding-bottom: 5px;
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  li {
+  /* Forms */
+  form {
     background: ${({ theme }) => theme.colors.white};
-    margin-bottom: ${({ theme }) => theme.spacing.small};
-    padding: ${({ theme }) => theme.spacing.small};
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    border-left: 5px solid ${({ theme }) => theme.colors.primary};
+    padding: ${({ theme }) => theme.space.medium};
+    border-radius: ${({ theme }) => theme.radius.default};
+    box-shadow: ${({ theme }) => theme.shadow.subtle};
+    margin-top: ${({ theme }) => theme.space.small};
+  }
+
+  input, select {
+    width: 100%;
+    padding: ${({ theme }) => theme.space.small};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: ${({ theme }) => theme.radius.default};
+    margin-bottom: ${({ theme }) => theme.space.small};
   }
 
   button {
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
     border: none;
-    padding: ${({ theme }) => theme.spacing.small} ${({ theme }) => theme.spacing.medium};
-    border-radius: 5px;
+    padding: ${({ theme }) => theme.space.small};
+    border-radius: ${({ theme }) => theme.radius.default};
     cursor: pointer;
     transition: background 0.3s;
+    width: 100%;
   }
 
   button:hover {
     background-color: ${({ theme }) => theme.colors.secondary};
-  }
-
-  input, select {
-    width: 100%;
-    padding: ${({ theme }) => theme.spacing.small};
-    border: 1px solid ${({ theme }) => theme.colors.border};
-    border-radius: 5px;
-    margin-bottom: ${({ theme }) => theme.spacing.small};
   }
 `;
 

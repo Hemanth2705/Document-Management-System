@@ -6,5 +6,8 @@ export interface CreateFolderDTO {
   export interface Folder {
     id: number;
     name: string;
+    parent_folder_id: number | null;
+    type: "folder"; // ✅ Add this
   }
+  
   
